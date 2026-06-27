@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para: Cristiano 💌</title>
+<!-- pista: principe -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0f;
+    --bg-warm:#1c1018;
+    --panel:#15151c;
+    --panel-border:#28283288;
+    --chrome:#1b1b23;
+    --red:#c8102e;
+    --black:#0a0a0a;
+    --cream:#f1ece1;
+    --muted:#8d8d9c;
+    --gold:#e8b84b;
+    --green:#5ec98c;
+    --mono:'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+    --hand:'Caveat', cursive;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 900px 600px at 50% -10%, rgba(200,16,46,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 90% 100%, rgba(232,184,75,0.06), transparent 60%),
+      var(--bg);
+    color:var(--cream);
+    font-family:var(--mono);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+    transition:background 1.4s ease;
+  }
+  body.warm{
+    background:
+      radial-gradient(ellipse 1000px 800px at 50% 30%, rgba(232,184,75,0.18), transparent 60%),
+      radial-gradient(ellipse 900px 700px at 80% 80%, rgba(200,16,46,0.14), transparent 60%),
+      var(--bg-warm);
+  }
+
+  .progress{
+    display:flex;
+    gap:8px;
+    margin-bottom:22px;
+    height:18px;
+  }
+  .progress span{
+    width:34px;height:4px;border-radius:3px;
+    background:#2a2a34;
+    transition:background .4s ease, transform .3s ease;
+  }
+  .progress span.done{background:var(--red);}
+  .progress span.now{background:var(--gold); transform:scaleY(1.6);}
+  .progress.hidden{display:none;}
+
+  main{width:100%; max-width:640px;}
+
+  .terminal{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02);
+    overflow:hidden;
+    width:100%;
+  }
+  .chrome{
+    height:38px;
+    background:var(--chrome);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:0 14px;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.r{background:var(--red);}
+  .dot.k{background:#3a3a44;}
+  .dot.w{background:var(--cream); opacity:.5;}
+  .chrome-title{
+    margin-left:auto;
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:.02em;
+  }
+
+  .body-pad{padding:30px 26px 28px;}
+  @media (max-width:480px){ .body-pad{padding:22px 18px 20px;} }
+
+  .phase{display:none;}
+  .phase.active{display:block; animation:fadein .5s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+  .eyebrow b{color:var(--red);}
+
+  h1{
+    font-size:clamp(19px,4vw,24px);
+    margin:0 0 16px;
+    color:var(--cream);
+    line-height:1.35;
+  }
+
+  p{
+    font-size:14.5px;
+    line-height:1.75;
+    color:#cfcfd8;
+    margin:0 0 14px;
+    white-space:pre-line;
+  }
+
+  .note{
+    font-family:var(--hand);
+    font-size:21px;
+    color:var(--gold);
+    background:rgba(232,184,75,0.06);
+    border-left:2px solid var(--gold);
+    padding:10px 16px;
+    margin:18px 0;
+    border-radius:0 8px 8px 0;
+    line-height:1.4;
+    transform:rotate(-0.4deg);
+  }
+
+  .cipher-block, .code-block{
+    background:#0d0d12;
+    border:1px solid #25252f;
+    border-radius:8px;
+    padding:16px;
+    margin:14px 0 18px;
+    font-size:14px;
+    letter-spacing:.06em;
+    color:var(--green);
+    overflow-x:auto;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .code-block{color:#9fc7ff; letter-spacing:0;}
+  .code-block .c{color:#6f6f7d;}
+  .code-block .k{color:var(--red);}
+
+  form{display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;}
+  input[type=text]{
+    flex:1;
+    min-width:160px;
+    background:#0d0d12;
+    border:1px solid #2a2a35;
+    color:var(--cream);
+    font-family:var(--mono);
+    font-size:14px;
+    padding:12px 14px;
+    border-radius:8px;
+    outline:none;
+  }
+  input[type=text]:focus-visible{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(232,184,75,0.18);
+  }
+  button{
+    background:var(--red);
+    color:#fff;
+    border:none;
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:13.5px;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:transform .15s ease, background .2s ease;
+  }
+  button:hover{background:#a90e26;}
+  button:active{transform:scale(.97);}
+  button:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+  button.ghost{
+    background:transparent;
+    border:1px solid #34343f;
+    color:var(--muted);
+  }
+  button.ghost:hover{color:var(--cream); border-color:var(--muted);}
+
+  .feedback{
+    margin-top:12px;
+    font-size:13.5px;
+    min-height:18px;
+  }
+  .feedback.err{color:var(--red);}
+  .feedback.ok{color:var(--green);}
+
+  .shake{animation:shake .4s ease;}
+  @keyframes shake{
+    10%,90%{transform:translateX(-2px);}
+    20%,80%{transform:translateX(4px);}
+    30%,50%,70%{transform:translateX(-6px);}
+    40%,60%{transform:translateX(6px);}
+  }
+
+  .continue-row{margin-top:16px; display:none;}
+  .continue-row.show{display:block;}
+
+  .hint-btn{
+    background:none; border:none; color:var(--muted);
+    font-size:12px; text-decoration:underline; cursor:pointer;
+    padding:4px 0; font-family:var(--mono);
+  }
+  .hint-text{
+    font-size:13px; color:var(--muted); margin-top:8px; display:none;
+  }
+  .hint-text.show{display:block;}
+
+  /* hidden clue */
+  .ghost-zone{
+    margin:16px 0 6px;
+    padding:10px 0;
+    cursor:text;
+  }
+  .ghost{
+    color:var(--panel);
+    user-select:text;
+    font-size:14.5px;
+  }
+
+  /* final reveal */
+  .reveal-screen{
+    display:none;
+    text-align:center;
+    padding:10px 4px 6px;
+  }
+  .reveal-screen.show{display:block;}
+  .reveal-phrase{
+    font-family:var(--hand);
+    color:var(--gold);
+    font-size:clamp(28px,6vw,42px);
+    line-height:1.25;
+    margin:10px 0 22px;
+  }
+  .letter-note{
+    font-family:var(--hand);
+    color:var(--cream);
+    font-size:20px;
+    line-height:1.55;
+    text-align:left;
+    border-top:1px dashed #3a3a45;
+    padding-top:18px;
+    margin-top:10px;
+    white-space:pre-line;
+  }
+  .signature{
+    text-align:right;
+    color:var(--gold);
+    margin-top:6px;
+  }
+
+  footer{
+    margin-top:18px;
+    font-size:11px;
+    color:#55555f;
+    text-align:center;
+  }
+
+  /* hearts */
+  #hearts-layer{
+    position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50;
+  }
+  .heart{
+    position:absolute;
+    bottom:-30px;
+    font-size:18px;
+    opacity:.85;
+    animation:rise linear forwards;
+  }
+  @keyframes rise{
+    to{transform:translateY(-110vh) rotate(360deg); opacity:0;}
+  }
+  .confetti{
+    position:absolute;
+    top:-20px;
+    width:8px;height:14px;
+    opacity:.9;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{transform:translateY(110vh) rotate(540deg); opacity:0;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .phase.active{animation:none;}
+    .shake{animation:none;}
+    .heart, .confetti{animation:none; display:none;}
+  }
+</style>
+</head>
+<body id="body">
+
+<div class="progress hidden" id="progress"></div>
+
+<main>
+  <div class="terminal">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot k"></span><span class="dot w"></span>
+      <span class="chrome-title">gabriela@coracao:~/cristiano</span>
+    </div>
+    <div class="body-pad">
+
+      <!-- GATE -->
+      <section class="phase active" data-phase="gate">
+        <div class="eyebrow">SISTEMA <b>•</b> AUTENTICAÇÃO NECESSÁRIA</div>
+        <h1>Acesso restrito.</h1>
+        <p>&gt; iniciando sistema...
+&gt; carregando memórias afetivas...
+&gt; localizando usuário: Cristiano
+&gt; status: ACESSO BLOQUEADO</p>
+        <p>Pra entrar, eu preciso confirmar que é mesmo você. Digite a data que virou o primeiro commit oficial de nós dois (formato DD/MM):</p>
+        <form id="form-gate">
+          <input type="text" id="input-gate" placeholder="DD/MM" autocomplete="off">
+          <button type="submit">Autenticar</button>
+        </form>
+        <div class="feedback" id="fb-gate"></div>
+      </section>
+
+      <!-- INTRO (carta inicial) -->
+      <section class="phase" data-phase="intro">
+        <div class="eyebrow">ACESSO CONCEDIDO ✓</div>
+        <h1>Bem-vindo de volta, Cristiano.</h1>
+        <p>Programei esse site inteiro só pra te entregar uma mensagem. Mas você não merece receber de bandeja — você merece decifrar ela, porque você sempre diz ser competitivo, então agora eu te dou a opção de provar.</p>
+        <p>São 5 desafios. No último, uma mensagem será decifrada e o resultado vai ser a verdade que eu tenho mais certeza.</p>
+        <div class="note">vai com calma, meu príncipe.</div>
+        <div class="continue-row show">
+          <button id="btn-start">Aceitar desafio →</button>
+        </div>
+      </section>
+
+      <!-- DESAFIO 1: charada restaurante -->
+      <section class="phase" data-phase="p1">
+        <div class="eyebrow"><b>DESAFIO 01/05</b> — A ORIGEM</div>
+        <h1>Onde tudo começou</h1>
+        <p>Lembro de te ver pela primeira vez pelo vidro do carro, você estava lindo, e quando entrou o seu perfume se espalhou por todo o ambiente. Você sorriu pra mim pela primeira vez, um sorriso tão lindo, que só de pensar me dá vontade de chorar.
+Naquela hora eu ainda não sabia que você seria tudo isso que se tornou pra mim, mas eu queria muito que você fosse meu, e saber que eu tenho isso agora já é tudo pra mim.</p>
+        <p><b>Qual o nome do restaurante do nosso primeiro encontro?</b></p>
+        <form id="form-p1">
+          <input type="text" id="input-p1" placeholder="digite aqui" autocomplete="off">
+          <button type="submit">Verificar</button>
+        </form>
+        <div class="feedback" id="fb-p1"></div>
+        <div class="continue-row" id="cont-p1">
+          <div class="note" id="note-p1"></div>
+          <button id="btn-p1-next">Continuar →</button>
+        </div>
+      </section>
+
+      <!-- DESAFIO 2: pista escondida -->
+      <section class="phase" data-phase="p2">
+        <div class="eyebrow"><b>DESAFIO 02/05</b> — NOS BASTIDORES</div>
+        <h1>O que não aparece na tela</h1>
+        <p>nessa página tem um desafio de programação, então irei deixar abaixo:</p>
+        <p>Programador bom sabe que nem tudo que existe aparece renderizado. Tem coisa que só existe pra quem sabe onde — e como — procurar.</p>
+        <p>Essa página esconde uma palavra à vista de todos. Selecione tudo (Ctrl+A ou Cmd+A) na área abaixo — ou inspecione o código-fonte.</p>
+        <p>Você vai resolver beeem fácil, já que isso é basicamente seu hobby favorito :)</p>
+        <div class="ghost-zone">
+          <span class="ghost">príncipe</span>
+        </div>
+        <p><b>Qual o apelido que a Gabriela mais usa pra te chamar?</b></p>
+        <form id="form-p2">
+          <input type="text" id="input-p2" placeholder="digite aqui" autocomplete="off">
+          <button type="submit">Verificar</button>
+        </form>
+        <div class="feedback" id="fb-p2"></div>
+        <div class="continue-row" id="cont-p2">
+          <div class="note" id="note-p2"></div>
+          <button id="btn-p2-next">Continuar →</button>
+        </div>
+      </section>
+
+      <!-- DESAFIO 3: cifra de cesar -->
+      <section class="phase" data-phase="p3">
+        <div class="eyebrow"><b>DESAFIO 03/05</b> — A VIAGEM</div>
+        <h1>Decifre o destino</h1>
+        <p>Cifra de César: cada letra escorrega um número fixo de casas no alfabeto. A chave de hoje está escondida na data que você decorou pra entrar aqui — pega só o mês.</p>
+        <p>Decifre o nome do destino da nossa primeira viagem juntos, lá no final de 2025:</p>
+        <div class="cipher-block" id="cipher-p3"></div>
+        <form id="form-p3">
+          <input type="text" id="input-p3" placeholder="resposta decifrada" autocomplete="off">
+          <button type="submit">Verificar</button>
+        </form>
+        <button type="button" class="hint-btn" id="hint-p3-btn">preciso de uma dica</button>
+        <div class="hint-text" id="hint-p3-text">a chave é o mês do dia 11/02.</div>
+        <div class="feedback" id="fb-p3"></div>
+        <div class="continue-row" id="cont-p3">
+          <div class="note" id="note-p3"></div>
+          <button id="btn-p3-next">Continuar →</button>
+        </div>
+      </section>
+
+      <!-- DESAFIO 4: codigo -->
+      <section class="phase" data-phase="p4">
+        <div class="eyebrow"><b>DESAFIO 04/05</b> — RODE O CÓDIGO</div>
+        <h1>Sem precisar abrir o editor</h1>
+        <p>Esse aqui você resolve de cabeça, nem precisa abrir o VS Code:</p>
+        <div class="code-block"><span class="k">function</span> chaveFinal(dia, mes) {
+  <span class="k">return</span> dia - mes;
+}
+
+console.log(chaveFinal(<span class="c">11</span>, <span class="c">2</span>));</div>
+        <p><b>O que essa função retorna? Guarda esse número — é a chave do desafio final.</b></p>
+        <form id="form-p4">
+          <input type="text" id="input-p4" placeholder="número" autocomplete="off">
+          <button type="submit">Verificar</button>
+        </form>
+        <div class="feedback" id="fb-p4"></div>
+        <div class="continue-row" id="cont-p4">
+          <div class="note" id="note-p4"></div>
+          <button id="btn-p4-next">Continuar →</button>
+        </div>
+      </section>
+
+      <!-- DESAFIO FINAL -->
+      <section class="phase" data-phase="final">
+        <div id="final-puzzle">
+          <div class="eyebrow"><b>DESAFIO 05/05</b> — A DECIFRAÇÃO</div>
+          <h1>A última cifra</h1>
+          <p>Mesma lógica das anteriores, chave diferente — você já sabe qual é (psst: é a mesma que você acabou de calcular).</p>
+          <div class="cipher-block" id="cipher-final"></div>
+          <p>Digite a chave para decifrar:</p>
+          <form id="form-final">
+            <input type="text" id="input-final" placeholder="chave" autocomplete="off">
+            <button type="submit">Decifrar</button>
+          </form>
+          <div class="feedback" id="fb-final"></div>
+        </div>
+
+        <div class="reveal-screen" id="reveal-screen">
+          <div class="eyebrow">DECODIFICAÇÃO CONCLUÍDA ✓</div>
+          <div class="reveal-phrase">"A Gabriela está absurdamente apaixonada por você."</div>
+          <div class="letter-note">Acho que isso pode ter sido meio brega, mas é o que eu sinto por você. Sou apaixonada por você e sempre vou ser cada dia mais, passo todos os meus dias pensando em você e sonhando em te dar mais um abraço, que aliás, espero te dar vários hoje. Espero muito que você curta o seu aniversário, vou me esforçar pra superar a cada ano.</div>
+          <div class="signature">— Gabriela</div>
+          <div class="continue-row show" style="text-align:center; margin-top:22px;">
+            <button class="ghost" id="btn-restart">reviver o desafio desde o início</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>versão 1.0 — compilado com amor (e uma camisa do Sport no armário)</footer>
+</main>
+
+<div id="hearts-layer"></div>
+
+<script>
+(function(){
+  const STEPS = ['p1','p2','p3','p4','final'];
+  const body = document.getElementById('body');
+  const progressEl = document.getElementById('progress');
+
+  function buildProgress(){
+    progressEl.innerHTML = '';
+    STEPS.forEach(()=>{
+      const s = document.createElement('span');
+      progressEl.appendChild(s);
+    });
+  }
+  buildProgress();
+
+  function updateProgress(activeId){
+    const idx = STEPS.indexOf(activeId);
+    progressEl.classList.toggle('hidden', idx === -1);
+    Array.from(progressEl.children).forEach((el,i)=>{
+      el.classList.remove('done','now');
+      if(i < idx) el.classList.add('done');
+      if(i === idx) el.classList.add('now');
+    });
+  }
+
+  function showPhase(id){
+    document.querySelectorAll('.phase').forEach(p=>{
+      p.classList.toggle('active', p.dataset.phase === id);
+    });
+    updateProgress(id);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function norm(s){
+    return (s||'').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[^a-z0-9]/g,'')
+      .trim();
+  }
+  function digitsOnly(s){ return (s||'').replace(/[^0-9]/g,''); }
+
+  function shakeInput(input){
+    input.classList.add('shake');
+    setTimeout(()=>input.classList.remove('shake'), 400);
+  }
+
+  function caesar(text, shift){
+    return text.toUpperCase().split('').map(ch=>{
+      if(ch >= 'A' && ch <= 'Z'){
+        const code = ((ch.charCodeAt(0) - 65 + shift) % 26 + 26) % 26 + 65;
+        return String.fromCharCode(code);
+      }
+      return ch;
+    }).join('');
+  }
+
+  // ---------- GATE ----------
+  document.getElementById('form-gate').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = document.getElementById('input-gate');
+    const fb = document.getElementById('fb-gate');
+    if(digitsOnly(input.value) === '1102'){
+      fb.textContent = 'ACESSO CONCEDIDO ✓';
+      fb.className = 'feedback ok';
+      setTimeout(()=> showPhase('intro'), 600);
+    } else {
+      fb.textContent = 'ERRO 403 — acesso negado. Tenta de novo, príncipe.';
+      fb.className = 'feedback err';
+      shakeInput(input);
+    }
+  });
+
+  document.getElementById('btn-start').addEventListener('click', ()=> showPhase('p1'));
+
+  // ---------- DESAFIO 1 ----------
+  document.getElementById('form-p1').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = document.getElementById('input-p1');
+    const fb = document.getElementById('fb-p1');
+    if(norm(input.value).includes('fornorecife')){
+      fb.textContent = 'Correto ✓';
+      fb.className = 'feedback ok';
+      document.getElementById('note-p1').textContent = 'Exato. Eu lembro de cada detalhe daquela noite.';
+      document.getElementById('cont-p1').classList.add('show');
+      input.disabled = true;
+    } else {
+      fb.textContent = 'Hmm, não foi ali. Pensa de novo.';
+      fb.className = 'feedback err';
+      shakeInput(input);
+    }
+  });
+  document.getElementById('btn-p1-next').addEventListener('click', ()=> showPhase('p2'));
+
+  // ---------- DESAFIO 2 ----------
+  document.getElementById('form-p2').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = document.getElementById('input-p2');
+    const fb = document.getElementById('fb-p2');
+    if(norm(input.value).includes('principe')){
+      fb.textContent = 'Correto ✓';
+      fb.className = 'feedback ok';
+      document.getElementById('note-p2').textContent = 'Sempre. Em legenda de foto, em mensagem boba, sempre príncipe.';
+      document.getElementById('cont-p2').classList.add('show');
+      input.disabled = true;
+    } else {
+      fb.textContent = 'Ainda não... olha com mais atenção (ou seleciona tudo).';
+      fb.className = 'feedback err';
+      shakeInput(input);
+    }
+  });
+  document.getElementById('btn-p2-next').addEventListener('click', ()=> showPhase('p3'));
+
+  // ---------- DESAFIO 3 ----------
+  const cipherP3 = caesar('PORTO DE GALINHAS', 2);
+  document.getElementById('cipher-p3').textContent = cipherP3;
+
+  document.getElementById('hint-p3-btn').addEventListener('click', function(){
+    document.getElementById('hint-p3-text').classList.toggle('show');
+  });
+
+  document.getElementById('form-p3').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = document.getElementById('input-p3');
+    const fb = document.getElementById('fb-p3');
+    if(norm(input.value) === norm('PORTO DE GALINHAS')){
+      fb.textContent = 'Correto ✓';
+      fb.className = 'feedback ok';
+      document.getElementById('note-p3').textContent = 'Isso. Sol, coco e a certeza de que eu queria mil viagens com você.';
+      document.getElementById('cont-p3').classList.add('show');
+      input.disabled = true;
+    } else {
+      fb.textContent = 'Quase! Revê a chave.';
+      fb.className = 'feedback err';
+      shakeInput(input);
+    }
+  });
+  document.getElementById('btn-p3-next').addEventListener('click', ()=> showPhase('p4'));
+
+  // ---------- DESAFIO 4 ----------
+  document.getElementById('form-p4').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = document.getElementById('input-p4');
+    const fb = document.getElementById('fb-p4');
+    if(parseInt(input.value, 10) === 9){
+      fb.textContent = 'Correto ✓';
+      fb.className = 'feedback ok';
+      document.getElementById('note-p4').textContent = 'Boa, dev. Guarda esse número.';
+      document.getElementById('cont-p4').classList.add('show');
+      input.disabled = true;
+    } else {
+      fb.textContent = 'Roda de novo a função aí 😅';
+      fb.className = 'feedback err';
+      shakeInput(input);
+    }
+  });
+  document.getElementById('btn-p4-next').addEventListener('click', ()=> showPhase('final'));
+
+  // ---------- DESAFIO FINAL ----------
+  const FINAL_KEY = 9;
+  const finalPlainDeaccent = 'A GABRIELA ESTA ABSURDAMENTE APAIXONADA POR VOCE';
+  const cipherFinal = caesar(finalPlainDeaccent, FINAL_KEY);
+  document.getElementById('cipher-final').textContent = cipherFinal;
+
+  document.getElementById('form-final').addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = document.getElementById('input-final');
+    const fb = document.getElementById('fb-final');
+    if(parseInt(input.value, 10) === FINAL_KEY){
+      fb.textContent = 'Chave aceita. Decifrando...';
+      fb.className = 'feedback ok';
+      setTimeout(launchReveal, 500);
+    } else {
+      fb.textContent = 'Chave errada. Mas relaxa, ela tá em algum desafio anterior.';
+      fb.className = 'feedback err';
+      shakeInput(input);
+    }
+  });
+
+  function launchReveal(){
+    document.getElementById('final-puzzle').style.display = 'none';
+    document.getElementById('reveal-screen').classList.add('show');
+    body.classList.add('warm');
+    updateProgress('final');
+    progressEl.classList.add('hidden');
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      spawnHearts();
+      spawnConfetti();
+    }
+  }
+
+  function spawnHearts(){
+    const layer = document.getElementById('hearts-layer');
+    const symbols = ['❤','💛','🤍'];
+    let count = 0;
+    const interval = setInterval(()=>{
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+      h.style.left = (Math.random()*100) + 'vw';
+      h.style.fontSize = (14 + Math.random()*16) + 'px';
+      h.style.animationDuration = (4 + Math.random()*3) + 's';
+      layer.appendChild(h);
+      setTimeout(()=> h.remove(), 8000);
+      count++;
+      if(count > 26) clearInterval(interval);
+    }, 220);
+  }
+
+  function spawnConfetti(){
+    const layer = document.getElementById('hearts-layer');
+    const colors = ['#c8102e','#e8b84b','#f1ece1','#0a0a0a'];
+    for(let i=0;i<60;i++){
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = (Math.random()*100) + 'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration = (2.5 + Math.random()*2) + 's';
+      c.style.animationDelay = (Math.random()*0.6) + 's';
+      layer.appendChild(c);
+      setTimeout(()=> c.remove(), 5500);
+    }
+  }
+
+  document.getElementById('btn-restart').addEventListener('click', function(){
+    window.location.reload();
+  });
+
+})();
+</script>
+
+</body>
+</html>
